@@ -3,7 +3,7 @@ import { StyleSheet } from 'react-native';
 
 const globalStyles = StyleSheet.create({
     heading: {
-        fontSize: 24,
+        fontSize: 40,
         fontWeight: 'bold',
         color: Colors.primary,
     },
@@ -11,6 +11,13 @@ const globalStyles = StyleSheet.create({
         fontSize: 16,
         color: Colors.secondary,
     },
+    buttonText:{
+        fontSize: 20,
+        color: Colors.primary,
+        fontWeight: 'bold',
+        marginRight: 10,
+    },
+    
     link: {
         fontSize: 16,
         color: Colors.link,

@@ -1,19 +1,29 @@
 import React from "react";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import HomeScreen from "./screens/Home";
+import StoriesScreen from "./screens/Stories";
+import { createStackNavigator } from "@react-navigation/stack";
 
 const Tab = createBottomTabNavigator();
+const Stack = createStackNavigator();
 
-function TabNavigator() {
+
+
+function HomeStackNavigation() {
   return (
-    <Tab.Navigator>
-      <Tab.Screen
+    <Stack.Navigator>
+      <Stack.Screen
         name="Home"
         component={HomeScreen}
         options={{ headerShown: false }}
       />
-    </Tab.Navigator>
+      <Stack.Screen
+        name="Stories"
+        component={StoriesScreen}
+        options={{ headerShown: false }}
+      />
+    </Stack.Navigator>
   );
 }
 
-export default TabNavigator;
+export default HomeStackNavigation;
