@@ -13,8 +13,8 @@ const Settings = () => {
 
   // Handle switch toggle logic to ensure only one switch is on at a time
   const handleToggleSwitch = (switchId) => {
-    setIsLearning(switchId === 'learning');
-    setIsFun(switchId === 'fun');
+    setIsLearning(switchId === 'learning'   || switchId === 'both');
+    setIsFun(switchId === 'fun'|| switchId === 'both');
     setIsBoth(switchId === 'both');
   };
 
@@ -23,7 +23,7 @@ const Settings = () => {
     <View style={styles.container}>
       <Title style={styles.title}>Einstellungen</Title>
       <View style={styles.section}>
-        <Text>Geschichten sind:</Text>
+        <Title>Geschichten Einstellungen:</Title>
         <View style={styles.switchRow}>
           <Switch value={isLearning} onValueChange={() => handleToggleSwitch('learning')} />
           <Text>Lernend</Text>
@@ -39,7 +39,7 @@ const Settings = () => {
       </View>
       
       <View style={styles.section}>
-        <Title>Account</Title>
+        <Title>Account Einstellungen</Title>
         <TextInput
           label="Name"
           value={name}

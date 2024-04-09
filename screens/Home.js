@@ -5,6 +5,7 @@ import {
   View,
   TextInput,
   TouchableOpacity,
+
 } from "react-native";
 import React from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -13,25 +14,30 @@ import { FontAwesome, FontAwesome5 } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
 import { LinearGradient } from 'expo-linear-gradient';
 import SettingsScreen from "./Settings";
+import SettingsModal from "../utils/SettingsModal";
+import { Button } from "react-native-paper";
 
 const Home = () => {
   const [text, setText] = React.useState("");
   const navigation = useNavigation();
+  const [modalVisible, setModalVisible] = React.useState(false);
+
+  const toggleModal = () => {
+    setModalVisible(!modalVisible);
+  };
   return (
     
       <ImageBackground
         source={require("../assets/images/background.png")}
         style={StyleSheet.absoluteFillObject}
       >
+        <SettingsModal visible={modalVisible} onClose={toggleModal} />
         <SafeAreaView style={styles.safeAreaView}>
-        <View style={styles.header}>
-          <View style={styles.accountView}>
-            <FontAwesome5 name="user-circle" size={50} color="black" />
-          </View>
-          <TouchableOpacity style={styles.accountView} onPress={()=>navigation.navigate("Settings")}>
+        
+          <TouchableOpacity style={styles.gearView} onPress={()=>navigation.navigate("Settings")}>
             <FontAwesome name="gear" size={50} color="black" />
           </TouchableOpacity>
-        </View>
+        
         <View style={styles.bodyHeader}>
           
           <LinearGradient
@@ -40,7 +46,7 @@ const Home = () => {
             end={[0.5, 0]}
             style={{
               width: "100%",
-              height: "100%",
+              height: "60%",
               position: "absolute",
               bottom: 0,
               zIndex: 1,
@@ -48,7 +54,6 @@ const Home = () => {
               justifyContent: "flex-end",
             }}
           >
-
             <View style={styles.body}>
               <Text style={globalStyles.heading}>Erzähl mir was</Text>
               <Text style={globalStyles.paragraph}>ÜBER</Text>
@@ -63,9 +68,7 @@ const Home = () => {
               />
 
               <View style={styles.accountView}>
-                <TouchableOpacity >
-                  <FontAwesome name="gear" size={20} color="black" />
-                </TouchableOpacity>
+                <Button icon="tune-variant" onPress={() => toggleModal()}/>
               </View>
           </View>
 
@@ -128,18 +131,23 @@ const styles = StyleSheet.create({
   inputView: {
     marginTop: 20,
     marginBottom: 20,
+    width: "100%",
     alignItems: "center",
     justifyContent: "center",
     flexDirection: "row",
+    paddingHorizontal: 20,
   },
   input: {
-    width: "80%",
+    flex: 1,
     borderColor: "gray",
+    borderLeftWidth: 0,
     borderWidth: 1,
     borderRadius: 20,
     padding: 10,
     backgroundColor: "white",
     height: 50,
+    borderTopRightRadius: 0,
+    borderBottomRightRadius: 0,
   },
   body: {
     alignItems: "center",
@@ -151,9 +159,25 @@ const styles = StyleSheet.create({
     justifyContent: "flex-end",
   },
   accountView: {
+    
+    borderRadius: 50,
+    backgroundColor: "white",
+    borderColor: "black",
+    borderWidth: 1,
+    borderBottomLeftRadius: 0,
+    borderTopLeftRadius: 0,
+    height: 50,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  gearView: {
     padding: 10,
     backgroundColor: "white",
     borderRadius: 50,
+    position: "absolute",
+    right: 20,
+    top: 20,
+
   },
   header: {
     flex: 1,
