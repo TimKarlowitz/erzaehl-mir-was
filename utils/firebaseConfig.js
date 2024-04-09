@@ -1,5 +1,7 @@
 // Import the functions you need from the SDKs you need
+import Constants from "expo-constants";
 
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import { initializeApp } from "firebase/app";
 
 import { getAnalytics } from "firebase/analytics";
@@ -13,9 +15,11 @@ import { getAnalytics } from "firebase/analytics";
 
 // For Firebase JS SDK v7.20.0 and later, measurementId is optional
 
+const firebaseApiKey = Constants.expoConfig.extra.firebaseApiKey;
+
 const firebaseConfig = {
 
-  apiKey: "AIzaSyCYGY67NH6iyiG2m3WpTtHwjlmuubMYEy0",
+  apiKey: firebaseApiKey,
 
   authDomain: "erzaehlmirwas-8301e.firebaseapp.com",
 

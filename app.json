@@ -25,6 +25,10 @@
     },
     "web": {
       "favicon": "./assets/favicon.png"
+    },
+    "extra": {
+      "firebaseApiKey": "AIzaSyCYGY67NH6iyiG2m3WpTtHwjlmuubMYEy0"
     }
+    
   }
 }
