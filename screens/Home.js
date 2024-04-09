@@ -12,23 +12,25 @@ import globalStyles from "../utils/Styles";
 import { FontAwesome, FontAwesome5 } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
 import { LinearGradient } from 'expo-linear-gradient';
+import SettingsScreen from "./Settings";
 
 const Home = () => {
   const [text, setText] = React.useState("");
   const navigation = useNavigation();
   return (
-    <SafeAreaView style={styles.safeAreaView}>
+    
       <ImageBackground
         source={require("../assets/images/background.png")}
         style={StyleSheet.absoluteFillObject}
       >
+        <SafeAreaView style={styles.safeAreaView}>
         <View style={styles.header}>
           <View style={styles.accountView}>
             <FontAwesome5 name="user-circle" size={50} color="black" />
           </View>
-          <View style={styles.accountView}>
+          <TouchableOpacity style={styles.accountView} onPress={()=>navigation.navigate("Settings")}>
             <FontAwesome name="gear" size={50} color="black" />
-          </View>
+          </TouchableOpacity>
         </View>
         <View style={styles.bodyHeader}>
           
@@ -61,7 +63,7 @@ const Home = () => {
               />
 
               <View style={styles.accountView}>
-                <TouchableOpacity>
+                <TouchableOpacity >
                   <FontAwesome name="gear" size={20} color="black" />
                 </TouchableOpacity>
               </View>
@@ -84,9 +86,9 @@ const Home = () => {
           </View>
           </LinearGradient>
         </View>
-        
+        </SafeAreaView>
       </ImageBackground>
-    </SafeAreaView>
+    
   );
 };
 
@@ -162,8 +164,6 @@ const styles = StyleSheet.create({
   },
   safeAreaView: {
     flex: 1,
-    alignItems: "center",
-    justifyContent: "center",
   }
 });
 
