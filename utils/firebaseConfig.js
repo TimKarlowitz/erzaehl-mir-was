@@ -4,12 +4,11 @@ import Constants from "expo-constants";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { initializeApp } from "firebase/app";
 
-import { getAnalytics } from "firebase/analytics";
+import { initializeAuth, getReactNativePersistence } from "firebase/auth";
 
 // TODO: Add SDKs for Firebase products that you want to use
 
 // https://firebase.google.com/docs/web/setup#available-libraries
-
 
 // Your web app's Firebase configuration
 
@@ -18,7 +17,6 @@ import { getAnalytics } from "firebase/analytics";
 const firebaseApiKey = Constants.expoConfig.extra.firebaseApiKey;
 
 const firebaseConfig = {
-
   apiKey: firebaseApiKey,
 
   authDomain: "erzaehlmirwas-8301e.firebaseapp.com",
@@ -31,13 +29,14 @@ const firebaseConfig = {
 
   appId: "1:858448686654:web:87e7c90ac09707219e6b6f",
 
-  measurementId: "G-ZPEX705915"
-
+  measurementId: "G-ZPEX705915",
 };
-
 
 // Initialize Firebase
 
 const app = initializeApp(firebaseConfig);
 
-const analytics = getAnalytics(app);
+const auth = initializeAuth(app, {
+  persistence: getReactNativePersistence(AsyncStorage),
+});
+export { app, auth };
