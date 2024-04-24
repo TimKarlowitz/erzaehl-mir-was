@@ -5,41 +5,86 @@ import {
   View,
   TextInput,
   TouchableOpacity,
-
 } from "react-native";
 import React from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import globalStyles from "../utils/Styles";
 import { FontAwesome, FontAwesome5 } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
-import { LinearGradient } from 'expo-linear-gradient';
+import { LinearGradient } from "expo-linear-gradient";
 import SettingsScreen from "./Settings";
 import SettingsModal from "../utils/SettingsModal";
 import { Button } from "react-native-paper";
+import { Entypo } from "@expo/vector-icons";
+import { Ionicons } from "@expo/vector-icons";
+import ParentsModal from "../utils/ParentsModal";
 
 const Home = () => {
   const [text, setText] = React.useState("");
   const navigation = useNavigation();
   const [modalVisible, setModalVisible] = React.useState(false);
+  const [parentsModalVisible, setParentsModalVisible] = React.useState(false);
 
   const toggleModal = () => {
     setModalVisible(!modalVisible);
   };
+
+  const [onModalSuccess, setOnModalSuccess] = React.useState(() => () => {});
+
+  const showParentsModal = (onSuccess) => {
+    setOnModalSuccess(() => onSuccess); // Speichere die Callback-Funktion
+    setParentsModalVisible(true); // Zeige das Modal an
+  };
+
+  const handleModalClose = (solved) => {
+    setParentsModalVisible(false); // Verstecke das Modal
+    if (solved) {
+      onModalSuccess(); // Führe die Callback-Funktion aus, wenn die Aufgabe gelöst wurde
+    }
+  };
+
+  const handleSettingsPress = () => {
+    showParentsModal(() => navigation.navigate("Settings"));
+  };
+  const handleParentsPress = () => {
+    showParentsModal(() => navigation.navigate("Parents"));
+  };
+  const handleProfilePress = () => {
+    showParentsModal(() => navigation.navigate("Profile"));
+  };
   return (
-    
-      <ImageBackground
-        source={require("../assets/images/background.png")}
-        style={StyleSheet.absoluteFillObject}
-      >
-        <SettingsModal visible={modalVisible} onClose={toggleModal} />
-        <SafeAreaView style={styles.safeAreaView}>
-        
-          <TouchableOpacity style={styles.gearView} onPress={()=>navigation.navigate("Settings")}>
+    <ImageBackground
+      source={require("../assets/images/background.png")}
+      style={StyleSheet.absoluteFillObject}
+    >
+      <ParentsModal
+        visible={parentsModalVisible}
+        onClose={() => handleModalClose(false)}
+        onSolve={(solved) => handleModalClose(solved)}
+      />
+      <SettingsModal visible={modalVisible} onClose={toggleModal} />
+      <SafeAreaView style={styles.safeAreaView}>
+        <View style={styles.header}>
+          <TouchableOpacity
+            style={styles.gearView}
+            onPress={() => handleSettingsPress()}
+          >
             <FontAwesome name="gear" size={50} color="black" />
           </TouchableOpacity>
-        
+          <TouchableOpacity
+            style={styles.gearView}
+            onPress={() => handleParentsPress()}
+          >
+            <Entypo name="lock" size={50} color="black" />
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={styles.gearView}
+            onPress={() => handleProfilePress()}
+          >
+            <Ionicons name="person-sharp" size={50} color="black" />
+          </TouchableOpacity>
+        </View>
         <View style={styles.bodyHeader}>
-          
           <LinearGradient
             colors={["black", "black", "transparent"]}
             start={[0.5, 1]}
@@ -68,30 +113,35 @@ const Home = () => {
               />
 
               <View style={styles.accountView}>
-                <Button icon="tune-variant" onPress={() => toggleModal()}/>
+                <Button icon="tune-variant" onPress={() => toggleModal()} />
               </View>
-          </View>
+            </View>
 
-          <View style={styles.goContainer}>
-            <TouchableOpacity style={styles.goView}>
-              <Text style={globalStyles.buttonText}>Erzähl</Text>
-              <FontAwesome5 name="angle-right" size={40} color={globalStyles.buttonText.color} />
-            </TouchableOpacity>
-          </View>
+            <View style={styles.goContainer}>
+              <TouchableOpacity style={styles.goView}>
+                <Text style={globalStyles.buttonText}>Erzähl</Text>
+                <FontAwesome5
+                  name="angle-right"
+                  size={40}
+                  color={globalStyles.buttonText.color}
+                />
+              </TouchableOpacity>
+            </View>
 
-          <View style={styles.storiesContainer}>
-            <TouchableOpacity
-              onPress={() => navigation.navigate("Stories")}
-              style={styles.storiesView}
-            >
-              <Text style={globalStyles.buttonText}>Zu deinen Geschichten</Text>
-            </TouchableOpacity>
-          </View>
+            <View style={styles.storiesContainer}>
+              <TouchableOpacity
+                onPress={() => navigation.navigate("Stories")}
+                style={styles.storiesView}
+              >
+                <Text style={globalStyles.buttonText}>
+                  Zu deinen Geschichten
+                </Text>
+              </TouchableOpacity>
+            </View>
           </LinearGradient>
         </View>
-        </SafeAreaView>
-      </ImageBackground>
-    
+      </SafeAreaView>
+    </ImageBackground>
   );
 };
 
@@ -152,14 +202,14 @@ const styles = StyleSheet.create({
   body: {
     alignItems: "center",
     justifyContent: "center",
+    flex: 1,
   },
   bodyHeader: {
-    flex: 1,
+    flex: 4,
     alignItems: "center",
     justifyContent: "flex-end",
   },
   accountView: {
-    
     borderRadius: 50,
     backgroundColor: "white",
     borderColor: "black",
@@ -174,10 +224,9 @@ const styles = StyleSheet.create({
     padding: 10,
     backgroundColor: "white",
     borderRadius: 50,
-    position: "absolute",
-    right: 20,
-    top: 20,
-
+    justifyContent: "center",
+    alignItems: "center",
+    margin: 10,
   },
   header: {
     flex: 1,
@@ -188,7 +237,7 @@ const styles = StyleSheet.create({
   },
   safeAreaView: {
     flex: 1,
-  }
+  },
 });
 
 export default Home;

@@ -8,6 +8,8 @@ import Auth from "./screens/Auth";
 import Login from "./screens/Login";
 import SignUp from "./screens/SignUp";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
+import ParentsScreen from "./screens/ParentsScreen";
+import Profile from "./screens/Profile";
 
 const Tab = createBottomTabNavigator();
 const Stack = createStackNavigator();
@@ -28,6 +30,16 @@ function HomeStackNavigation() {
       <Stack.Screen
         name="Settings"
         component={SettingsScreen}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name="Parents"
+        component={ParentsScreen}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name="Profile"
+        component={Profile}
         options={{ headerShown: false }}
       />
     </Stack.Navigator>

@@ -19,6 +19,7 @@ const Stories = () => {
     const stories = await getAllStories();
     setStories(stories);
   };
+
   return (
     <SafeAreaView>
       <View style={styles.headerBox}>
