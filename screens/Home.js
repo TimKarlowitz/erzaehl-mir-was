@@ -18,12 +18,16 @@ import { Button } from "react-native-paper";
 import { Entypo } from "@expo/vector-icons";
 import { Ionicons } from "@expo/vector-icons";
 import ParentsModal from "../utils/ParentsModal";
+import Colors from "../utils/Colors";
+import { MaterialIcons } from "@expo/vector-icons";
 
 const Home = () => {
   const [text, setText] = React.useState("");
   const navigation = useNavigation();
   const [modalVisible, setModalVisible] = React.useState(false);
   const [parentsModalVisible, setParentsModalVisible] = React.useState(false);
+  //WARNING: Only for development purposes
+  const devMode = true;
 
   const toggleModal = () => {
     setModalVisible(!modalVisible);
@@ -32,6 +36,10 @@ const Home = () => {
   const [onModalSuccess, setOnModalSuccess] = React.useState(() => () => {});
 
   const showParentsModal = (onSuccess) => {
+    if (devMode) {
+      onSuccess();
+      return;
+    }
     setOnModalSuccess(() => onSuccess); // Speichere die Callback-Funktion
     setParentsModalVisible(true); // Zeige das Modal an
   };
@@ -69,19 +77,19 @@ const Home = () => {
             style={styles.gearView}
             onPress={() => handleSettingsPress()}
           >
-            <FontAwesome name="gear" size={50} color="black" />
+            <FontAwesome name="gear" size={30} color="black" />
           </TouchableOpacity>
           <TouchableOpacity
             style={styles.gearView}
             onPress={() => handleParentsPress()}
           >
-            <Entypo name="lock" size={50} color="black" />
+            <Entypo name="lock" size={30} color="black" />
           </TouchableOpacity>
           <TouchableOpacity
             style={styles.gearView}
             onPress={() => handleProfilePress()}
           >
-            <Ionicons name="person-sharp" size={50} color="black" />
+            <MaterialIcons name="person" size={30} color="black" />
           </TouchableOpacity>
         </View>
         <View style={styles.bodyHeader}>
@@ -216,11 +224,14 @@ const styles = StyleSheet.create({
   },
   gearView: {
     padding: 10,
-    backgroundColor: "white",
+    backgroundColor: Colors.primary,
     borderRadius: 50,
     justifyContent: "center",
     alignItems: "center",
+    alignContent: "center",
     margin: 10,
+    height: 50,
+    width: 50,
   },
   header: {
     flex: 1,

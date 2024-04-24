@@ -8,6 +8,7 @@ import {
   Button,
 } from "react-native";
 import React, { useState } from "react";
+import Colors from "./Colors";
 
 const generateMathProblem = () => {
   const num1 = Math.floor(Math.random() * 10) + 1;
@@ -41,7 +42,6 @@ const ParentsModal = ({ visible, onClose, onSolve }) => {
       transparent={true}
       visible={visible}
       onRequestClose={() => onClose(false)}
-      style={styles.modal}
     >
       <View style={styles.centeredView}>
         <TouchableOpacity
@@ -61,8 +61,12 @@ const ParentsModal = ({ visible, onClose, onSolve }) => {
             value={userInput}
             onChangeText={setUserInput}
             placeholder="Deine Antwort"
+            placeholderTextColor={"white"}
           />
-          <Button title="Bestätigen" onPress={validateAnswer} />
+
+          <TouchableOpacity onPress={validateAnswer} style={styles.sendButton}>
+            <Text style={styles.textStyle}>Bestätigen</Text>
+          </TouchableOpacity>
         </View>
       </View>
     </Modal>
@@ -72,34 +76,53 @@ const ParentsModal = ({ visible, onClose, onSolve }) => {
 export default ParentsModal;
 
 const styles = StyleSheet.create({
+  modalText: {
+    marginBottom: 15,
+    textAlign: "center",
+    color: "white",
+  },
+  sendButton: {
+    backgroundColor: "white",
+    padding: 10,
+    borderRadius: 10,
+    marginTop: 10,
+  },
+  textStyle: {
+    color: "black",
+    fontWeight: "bold",
+    textAlign: "center",
+  },
   input: {
     height: 40,
     margin: 12,
-    borderWidth: 1,
     padding: 10,
-    color: "black",
-    backgroundColor: "white",
-  },
-  modal: {
-    height: "50%",
+    color: "white",
+    backgroundColor: "black",
+    borderRadius: 10,
   },
   centeredView: {
     flex: 1,
+    backgroundColor: Colors.secondary,
+    padding: 40,
+    borderRadius: 20,
     justifyContent: "center",
     alignItems: "center",
-    marginTop: 22,
-    backgroundColor: "white",
-    height: "60%",
-    borderWidth: 1,
-    borderColor: "black",
-    borderTopEndRadius: 20,
-    borderTopStartRadius: 20,
+    alignSelf: "center",
     position: "absolute",
-    bottom: 0,
-    width: "100%",
+    bottom: "30%",
+    margin: 20,
+    width: "90%",
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 1,
+    shadowRadius: 4,
+    elevation: 5,
   },
   buttonClose: {
-    backgroundColor: "#2196F3",
+    backgroundColor: "white",
     borderRadius: 20,
     padding: 10,
     elevation: 2,
