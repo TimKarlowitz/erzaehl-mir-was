@@ -111,10 +111,6 @@ const Home = () => {
                 onChangeText={(text) => setText(text)}
                 defaultValue={text}
               />
-
-              <View style={styles.accountView}>
-                <Button icon="tune-variant" onPress={() => toggleModal()} />
-              </View>
             </View>
 
             <View style={styles.goContainer}>
@@ -190,14 +186,12 @@ const styles = StyleSheet.create({
   input: {
     flex: 1,
     borderColor: "gray",
-    borderLeftWidth: 0,
+
     borderWidth: 1,
     borderRadius: 20,
     padding: 10,
     backgroundColor: "white",
     height: 50,
-    borderTopRightRadius: 0,
-    borderBottomRightRadius: 0,
   },
   body: {
     alignItems: "center",
