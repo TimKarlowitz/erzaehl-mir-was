@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import HomeScreen from "./screens/Home";
 import StoriesScreen from "./screens/Stories";
@@ -7,6 +7,7 @@ import { createStackNavigator } from "@react-navigation/stack";
 import Auth from "./screens/Auth";
 import Login from "./screens/Login";
 import SignUp from "./screens/SignUp";
+import { getAuth, onAuthStateChanged } from "firebase/auth";
 
 const Tab = createBottomTabNavigator();
 const Stack = createStackNavigator();
@@ -34,28 +35,63 @@ function HomeStackNavigation() {
 }
 
 const AuthStack = () => {
+  const [isLoading, setIsLoading] = useState(true); // Initially true
+
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+
+  useEffect(() => {
+    console.log("RootStack: useEffect");
+    const auth = getAuth();
+    console.log("RootStack: auth", auth);
+    console.log("RootStack: auth.user", auth.user);
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      if (user) {
+        // User is logged in
+        setIsAuthenticated(true);
+        setIsLoading(false);
+      } else {
+        // User is not logged in
+        setIsAuthenticated(false);
+        setIsLoading(false);
+      }
+      setIsLoading(false);
+    });
+
+    // Cleanup subscription on unmount
+    console.log("Authentication is: ", isAuthenticated);
+    return unsubscribe;
+  }, []);
+
+  if (isLoading) {
+    return null;
+  }
   return (
     <Stack.Navigator>
-      <Stack.Screen
-        name="Auth"
-        component={Auth}
-        options={{ headerShown: false }}
-      />
-      <Stack.Screen
-        name="Login"
-        component={Login}
-        options={{ headerShown: false }}
-      />
-      <Stack.Screen
-        name="SignUp"
-        component={SignUp}
-        options={{ headerShown: false }}
-      />
-      <Stack.Screen
-        name="App"
-        component={HomeStackNavigation}
-        options={{ headerShown: false }}
-      />
+      {!isAuthenticated ? (
+        <>
+          <Stack.Screen
+            name="Auth"
+            component={Auth}
+            options={{ headerShown: false }}
+          />
+          <Stack.Screen
+            name="Login"
+            component={Login}
+            options={{ headerShown: false }}
+          />
+          <Stack.Screen
+            name="SignUp"
+            component={SignUp}
+            options={{ headerShown: false }}
+          />
+        </>
+      ) : (
+        <Stack.Screen
+          name="App"
+          component={HomeStackNavigation}
+          options={{ headerShown: false }}
+        />
+      )}
     </Stack.Navigator>
   );
 };
