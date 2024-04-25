@@ -20,6 +20,8 @@ import { Ionicons } from "@expo/vector-icons";
 import ParentsModal from "../utils/ParentsModal";
 import Colors from "../utils/Colors";
 import { MaterialIcons } from "@expo/vector-icons";
+import { addAgeGroup, addCategory, addStory } from "../utils/database";
+import { set } from "firebase/database";
 
 const Home = () => {
   const [text, setText] = React.useState("");
@@ -28,6 +30,10 @@ const Home = () => {
   const [parentsModalVisible, setParentsModalVisible] = React.useState(false);
   //WARNING: Only for development purposes
   const devMode = true;
+  const firebaseFunctionsURL =
+    "https://us-central1-erzaehlmirwas-8301e.cloudfunctions.net/generateStory-generateStory";
+
+  const [isSaving, setIsSaving] = React.useState(false);
 
   const toggleModal = () => {
     setModalVisible(!modalVisible);
@@ -60,6 +66,54 @@ const Home = () => {
   const handleProfilePress = () => {
     showParentsModal(() => navigation.navigate("Profile"));
   };
+
+  async function storyAPICall(keywords) {
+    setIsSaving(true);
+    const ageGroup = "5-10";
+    const style = "educational";
+    try {
+      const response = await fetch(firebaseFunctionsURL, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          keywords: keywords,
+          ageGroup: ageGroup,
+          style: style,
+        }),
+      });
+
+      const responseText = await response.text();
+      console.log("Raw response text: " + responseText); // Logs the raw response text
+
+      try {
+        const data = JSON.parse(responseText);
+        console.log(data);
+
+        if (data.message && data.message.content) {
+          const storyText = data.message.content.trim();
+          console.log(storyText);
+          await addStory(keywords, storyText, 1, 1, false);
+        } else {
+          console.error("Unexpected JSON format:", data);
+        }
+        setIsSaving(false);
+      } catch (error) {
+        console.error("Error parsing JSON:", error);
+      }
+    } catch (error) {
+      console.error("Error with fetch call:", error);
+    }
+  }
+
+  const handleCategoryAdd = () => {
+    addCategory("Test");
+  };
+  const handleAgeGroupAdd = () => {
+    addAgeGroup("Test");
+  };
+
   return (
     <ImageBackground
       source={require("../assets/images/background.png")}
@@ -90,6 +144,18 @@ const Home = () => {
             onPress={() => handleProfilePress()}
           >
             <MaterialIcons name="person" size={30} color="black" />
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={styles.gearView}
+            onPress={() => handleCategoryAdd()}
+          >
+            <Ionicons name="add" size={30} color="black" />
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={styles.gearView}
+            onPress={() => handleAgeGroupAdd()}
+          >
+            <Ionicons name="add" size={30} color="black" />
           </TouchableOpacity>
         </View>
         <View style={styles.bodyHeader}>
@@ -122,7 +188,10 @@ const Home = () => {
             </View>
 
             <View style={styles.goContainer}>
-              <TouchableOpacity style={styles.goView}>
+              <TouchableOpacity
+                style={styles.goView}
+                onPress={() => storyAPICall(text)}
+              >
                 <Text style={globalStyles.buttonText}>Erzähl</Text>
                 <FontAwesome5
                   name="angle-right"
