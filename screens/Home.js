@@ -106,7 +106,7 @@ const Home = () => {
       console.error("Error with fetch call:", error);
     }
   }
-
+  //Warning: Only for development purposes
   const handleCategoryAdd = () => {
     for (let i = 0; i < 3; i++) {
       addCategory("Test");
