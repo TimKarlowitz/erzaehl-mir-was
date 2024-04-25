@@ -108,10 +108,14 @@ const Home = () => {
   }
 
   const handleCategoryAdd = () => {
-    addCategory("Test");
+    for (let i = 0; i < 3; i++) {
+      addCategory("Test");
+    }
   };
   const handleAgeGroupAdd = () => {
-    addAgeGroup("Test");
+    for (let i = 0; i < 3; i++) {
+      addAgeGroup("Test");
+    }
   };
 
   return (
