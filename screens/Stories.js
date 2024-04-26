@@ -53,7 +53,8 @@ const Stories = () => {
         ) : (
           stories.map((story) => (
             <View key={story.id} style={styles.storyContainer}>
-              <Text>{story.content}</Text>
+              <Text style={styles.titleText}>{story.title}</Text>
+              <Text style={styles.storyText}>{story.content}</Text>
             </View>
           ))
         )}
@@ -65,8 +66,19 @@ const Stories = () => {
 export default Stories;
 
 const styles = StyleSheet.create({
+  titleText: {
+    fontSize: 24,
+    color: "white",
+    fontWeight: "bold",
+  },
+  storyText: {
+    fontSize: 20,
+    color: "white",
+  },
   storyContainer: {
-    padding: 10,
+    borderRadius: 20,
+    margin: 10,
+    padding: 20,
     borderBottomWidth: 1,
     borderBottomColor: "black",
     backgroundColor: Colors.primary,
