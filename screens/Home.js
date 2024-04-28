@@ -20,7 +20,12 @@ import { Ionicons } from "@expo/vector-icons";
 import ParentsModal from "../utils/ParentsModal";
 import Colors from "../utils/Colors";
 import { MaterialIcons } from "@expo/vector-icons";
-import { addAgeGroup, addCategory, addStory } from "../utils/database";
+import {
+  addAgeGroup,
+  addCategory,
+  addStory,
+  insertKeyword,
+} from "../utils/database";
 import { set } from "firebase/database";
 
 const Home = () => {
@@ -94,7 +99,7 @@ const Home = () => {
         if (data.message && data.message.content) {
           const storyText = data.message.content.trim();
           console.log(storyText);
-          await addStory(keywords, storyText, 1, 1, false);
+          await addStory(keywords, storyText, 1, 1, false, keywords);
         } else {
           console.error("Unexpected JSON format:", data);
         }
@@ -107,16 +112,6 @@ const Home = () => {
     }
   }
   //Warning: Only for development purposes
-  const handleCategoryAdd = () => {
-    for (let i = 0; i < 3; i++) {
-      addCategory("Test");
-    }
-  };
-  const handleAgeGroupAdd = () => {
-    for (let i = 0; i < 3; i++) {
-      addAgeGroup("Test");
-    }
-  };
 
   return (
     <ImageBackground
@@ -148,18 +143,6 @@ const Home = () => {
             onPress={() => handleProfilePress()}
           >
             <MaterialIcons name="person" size={30} color="black" />
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={styles.gearView}
-            onPress={() => handleCategoryAdd()}
-          >
-            <Ionicons name="add" size={30} color="black" />
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={styles.gearView}
-            onPress={() => handleAgeGroupAdd()}
-          >
-            <Ionicons name="add" size={30} color="black" />
           </TouchableOpacity>
         </View>
         <View style={styles.bodyHeader}>

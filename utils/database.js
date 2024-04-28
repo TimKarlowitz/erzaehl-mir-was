@@ -36,6 +36,15 @@ export const createTables = () => {
         )
     );
 
+    // Insert default values into Categories
+    tx.executeSql(
+      "INSERT INTO Categories (name) VALUES ('Entertaining'), ('Educational')",
+      [],
+      () => console.log("Default categories inserted"),
+      (error) =>
+        console.log("Error occurred while inserting default categories:", error)
+    );
+
     tx.executeSql(
       "CREATE TABLE IF NOT EXISTS AgeGroups (id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT)",
       [],
@@ -43,21 +52,131 @@ export const createTables = () => {
       (error) =>
         console.log("Error occurred while creating the AgeGroups table:", error)
     );
+
+    // Insert default values into AgeGroups
+    tx.executeSql(
+      "INSERT INTO AgeGroups (name) VALUES ('3-6'), ('6-10')",
+      [],
+      () => console.log("Default age groups inserted"),
+      (error) =>
+        console.log("Error occurred while inserting default age groups:", error)
+    );
+
+    // Create Keywords table
+    tx.executeSql(
+      "CREATE TABLE IF NOT EXISTS Keywords (id INTEGER PRIMARY KEY AUTOINCREMENT, keyword TEXT, story_id INTEGER, FOREIGN KEY(story_id) REFERENCES Stories(id))",
+      [],
+      () => console.log("Keywords table created if not exists"),
+      (error) =>
+        console.log("Error occurred while creating the Keywords table:", error)
+    );
   });
 };
 
-export const addStory = (title, content, categoryId, ageGroupId, liked) => {
-  const currentDate = moment().format("YYYY-MM-DD");
-
+export const insertKeyword = (keyword, storyId) => {
   db.transaction((tx) => {
     tx.executeSql(
-      "INSERT INTO Stories (title, content, date, liked, category_id, agegroup_id) VALUES (?, ?, ?, ?, ?, ?)",
-      [title, content, currentDate, liked ? 1 : 0, categoryId, ageGroupId],
-      (_, result) => console.log("Story added with ID:", result.insertId),
-      (_, error) =>
-        console.error("Error occurred while adding the story:", error)
+      "INSERT INTO Keywords (keyword, story_id) VALUES (?, ?)",
+      [keyword, storyId],
+      () => console.log("Keyword inserted"),
+      (error) => console.log("Error occurred while inserting keyword:", error)
     );
   });
+};
+
+export const fetchAllKeywords = () => {
+  return new Promise((resolve, reject) => {
+    db.transaction((tx) => {
+      tx.executeSql(
+        "SELECT id, keyword, story_id FROM Keywords",
+        [],
+        (tx, results) => {
+          let keywords = [];
+          for (let i = 0; i < results.rows.length; i++) {
+            keywords.push({
+              id: results.rows.item(i).id,
+              keyword: results.rows.item(i).keyword,
+              storyId: results.rows.item(i).story_id,
+            });
+          }
+          resolve(keywords);
+        },
+        (error) => {
+          console.log("Error occurred while fetching all keywords:", error);
+          reject(error);
+        }
+      );
+    });
+  });
+};
+
+export const addStory = (
+  title,
+  content,
+  categoryId,
+  ageGroupId,
+  liked,
+  keywords
+) => {
+  const currentDate = moment().format("YYYY-MM-DD");
+
+  // Start the transaction
+  db.transaction(
+    async (tx) => {
+      // Insert the story first
+      tx.executeSql(
+        "INSERT INTO Stories (title, content, date, liked, category_id, agegroup_id) VALUES (?, ?, ?, ?, ?, ?)",
+        [title, content, currentDate, liked ? 1 : 0, categoryId, ageGroupId],
+        async (_, result) => {
+          console.log("Story added with ID:", result.insertId);
+
+          // Separate and clean the keywords
+          const separatedKeywords = keywords.split(",").map((k) => k.trim());
+          console.log("Cleaned Keywords for insertion:", separatedKeywords);
+
+          // Create a promise for each keyword insertion
+          const keywordPromises = separatedKeywords.map((keyword) => {
+            if (keyword.length > 0) {
+              return new Promise((resolve, reject) => {
+                tx.executeSql(
+                  "INSERT INTO Keywords (keyword, story_id) VALUES (?, ?)",
+                  [keyword, result.insertId],
+                  () => {
+                    console.log(`Keyword '${keyword}' inserted successfully.`);
+                    resolve();
+                  },
+                  (_, error) => {
+                    console.error(
+                      `Error inserting keyword '${keyword}':`,
+                      error
+                    );
+                    reject(error); // Reject the promise on error
+                  }
+                );
+              });
+            } else {
+              return Promise.resolve(); // Ignore empty keywords
+            }
+          });
+
+          // Wait for all keywords to be inserted
+          try {
+            await Promise.all(keywordPromises);
+          } catch (error) {
+            console.error("Error with keyword insertion promises:", error);
+          }
+        },
+        (_, error) =>
+          console.error("Error occurred while adding the story:", error)
+      );
+    },
+    (error) => {
+      console.error("Transaction Error:", error); // Log transaction-level errors
+    },
+    () => {
+      console.log("Transaction completed successfully");
+    }
+  );
 };
 
 export const deleteStory = (id) => {
