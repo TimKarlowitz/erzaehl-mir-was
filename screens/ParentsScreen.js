@@ -14,6 +14,8 @@ import { ScrollView } from "react-native-gesture-handler";
 import { getAllStories } from "../utils/database";
 import Colors from "../utils/Colors";
 import { fetchAllKeywords } from "../utils/database";
+import { Ionicons } from "@expo/vector-icons";
+import { TouchableOpacity } from "react-native-gesture-handler";
 
 const ParentsScreen = () => {
   const navigation = useNavigation();
@@ -48,15 +50,14 @@ const ParentsScreen = () => {
       <SafeAreaView style={{ flex: 1 }}>
         <View style={styles.container}>
           <View style={styles.headerBox}>
-            <Button
-              icon="arrow-left"
-              onPress={() => navigation.goBack()}
-            ></Button>
+            <TouchableOpacity onPress={() => navigation.goBack()}>
+              <Ionicons name="chevron-back-sharp" size={30} color="white" />
+            </TouchableOpacity>
             <Text style={{ ...globalStyles.heading, color: "white" }}>
               Elternbereich
             </Text>
           </View>
-          <Text style={styles.keywordsHeader}>Hier sind alle Keywords</Text>
+          <Text style={styles.keywordsHeader}>Keywords Ihres Kindes</Text>
           <ScrollView style={styles.scrollView}>
             {isLoading ? (
               <ActivityIndicator size="large" color="#0000ff" />
@@ -72,9 +73,6 @@ const ParentsScreen = () => {
               ))
             )}
           </ScrollView>
-          <Text style={styles.screentimeHeader}>
-            Hier ist die Bildschirmzeit
-          </Text>
         </View>
       </SafeAreaView>
     </ImageBackground>

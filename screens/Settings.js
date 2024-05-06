@@ -4,6 +4,10 @@ import { Switch, TextInput, Title } from "react-native-paper";
 import { SafeAreaView } from "react-native-safe-area-context";
 import Colors from "../utils/Colors";
 import { FontAwesome } from "@expo/vector-icons";
+import { useNavigation, useFocusEffect } from "@react-navigation/native";
+import { Ionicons } from "@expo/vector-icons";
+import { TouchableOpacity } from "react-native-gesture-handler";
+import globalStyles from "../utils/Styles";
 
 const Settings = () => {
   const [isLearning, setIsLearning] = React.useState(false);
@@ -11,6 +15,7 @@ const Settings = () => {
   const [isBoth, setIsBoth] = React.useState(true);
   const [name, setName] = React.useState("");
   const [ageGroup, setAgeGroup] = React.useState("5-10");
+  const navigation = useNavigation();
 
   // Handle switch toggle logic to ensure only one switch is on at a time
   const handleToggleSwitch = (switchId) => {
@@ -25,6 +30,14 @@ const Settings = () => {
       style={StyleSheet.absoluteFillObject}
     >
       <SafeAreaView style={{ flex: 1 }}>
+        <View style={styles.headerBox}>
+          <TouchableOpacity onPress={() => navigation.goBack()}>
+            <Ionicons name="chevron-back-sharp" size={30} color="white" />
+          </TouchableOpacity>
+          <Text style={{ ...globalStyles.heading, color: "white" }}>
+            Einstellungen
+          </Text>
+        </View>
         <View style={styles.container}>
           <View style={styles.section}>
             <Title>Geschichten Einstellungen:</Title>
@@ -84,6 +97,13 @@ const Settings = () => {
 };
 
 const styles = StyleSheet.create({
+  headerBox: {
+    flexDirection: "row",
+    alignItems: "center",
+    padding: 10,
+    flexDirection: "row",
+    justifyContent: "flex-start",
+  },
   gearCircle: {
     position: "absolute",
     top: -50,
