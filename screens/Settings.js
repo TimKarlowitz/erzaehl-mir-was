@@ -40,53 +40,29 @@ const Settings = () => {
         </View>
         <View style={styles.container}>
           <View style={styles.section}>
-            <Title>Geschichten Einstellungen:</Title>
-            <View style={styles.switchRow}>
-              <Switch
-                value={isLearning}
-                onValueChange={() => handleToggleSwitch("learning")}
-              />
-              <Text>Lernend</Text>
-            </View>
-            <View style={styles.switchRow}>
-              <Switch
-                value={isFun}
-                onValueChange={() => handleToggleSwitch("fun")}
-              />
-              <Text>Spaßig</Text>
-            </View>
-            <View style={styles.switchRow}>
-              <Switch
-                value={isBoth}
-                onValueChange={() => handleToggleSwitch("both")}
-              />
-              <Text>Beides</Text>
-            </View>
+            <Text style={styles.sectionText}> Ihre ID: 2WAd9das8J</Text>
           </View>
-
           <View style={styles.section}>
-            <Title>Account Einstellungen</Title>
-            <TextInput
-              label="Name"
-              value={name}
-              onChangeText={(text) => setName(text)}
-              mode="outlined"
-            />
-            <View style={styles.switchRow}>
-              <Switch
-                value={ageGroup === "5-10"}
-                onValueChange={() => setAgeGroup("5-10")}
-              />
-              <Text>5 – 10 Jahre</Text>
-            </View>
-            <View style={styles.switchRow}>
-              <Switch
-                value={ageGroup === "10-14"}
-                onValueChange={() => setAgeGroup("10-14")}
-              />
-              <Text>10 – 14 Jahre</Text>
-            </View>
+            <Text style={styles.sectionText}>
+              {" "}
+              Ihre Email: tim.karlowitz@gmail.com
+            </Text>
           </View>
+          <TouchableOpacity>
+            <View style={styles.section}>
+              <Text style={styles.sectionText}> Passwort vergessen </Text>
+            </View>
+          </TouchableOpacity>
+          <TouchableOpacity>
+            <View style={styles.section}>
+              <Text style={styles.sectionText}> Logout </Text>
+            </View>
+          </TouchableOpacity>
+          <TouchableOpacity>
+            <View style={styles.section}>
+              <Text style={styles.sectionText}> Account Löschen </Text>
+            </View>
+          </TouchableOpacity>
         </View>
       </SafeAreaView>
       <View style={styles.gearCircle}>
@@ -97,6 +73,10 @@ const Settings = () => {
 };
 
 const styles = StyleSheet.create({
+  sectionText: {
+    fontSize: 18,
+    color: "white",
+  },
   headerBox: {
     flexDirection: "row",
     alignItems: "center",
@@ -119,6 +99,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 10,
+    alignContent: "center",
   },
   title: {
     fontSize: 18,
@@ -129,7 +110,8 @@ const styles = StyleSheet.create({
     marginVertical: 20,
     backgroundColor: Colors.primary,
     borderRadius: 20,
-    padding: 10,
+    padding: 20,
+    alignItems: "center",
   },
   switchRow: {
     flexDirection: "row",

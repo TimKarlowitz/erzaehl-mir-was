@@ -33,7 +33,7 @@ const Profile = () => {
         <View style={styles.container}>
           <View style={styles.headerBox}>
             <TouchableOpacity onPress={() => navigation.goBack()}>
-              <Ionicons name="chevron-back-sharp" size={30} color="black" />
+              <Ionicons name="chevron-back-sharp" size={30} color="white" />
             </TouchableOpacity>
             <View style={styles.headerContainer}>
               <Text style={{ ...globalStyles.heading, color: "white" }}>
@@ -49,7 +49,7 @@ const Profile = () => {
               onChangeText={(text) => setName(text)}
               mode="outlined"
             />
-            <Title>Wie alt ist Ihr Kind?</Title>
+            <Title style={styles.heading}>Wie alt ist Ihr Kind:</Title>
             <View style={styles.switchRow}>
               <View style={styles.switchContainer}>
                 <Switch
@@ -75,7 +75,7 @@ const Profile = () => {
           </View>
 
           <View style={styles.section}>
-            <Title>Geschichten sind:</Title>
+            <Title style={styles.heading}>Geschichten sind:</Title>
             <View style={styles.switchRow}>
               <View style={styles.switchContainer}>
                 <Switch
@@ -118,6 +118,12 @@ const Profile = () => {
 };
 
 const styles = StyleSheet.create({
+  heading: {
+    fontSize: 20,
+    fontWeight: "bold",
+    color: "white",
+    marginBottom: 10,
+  },
   settingsText: {
     fontSize: 20,
     color: "black",
@@ -163,8 +169,6 @@ const styles = StyleSheet.create({
     color: "white",
   },
   section: {
-    marginVertical: 20,
-
     borderRadius: 20,
     padding: 10,
   },

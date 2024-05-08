@@ -72,10 +72,10 @@ const Stories = () => {
     >
       <SafeAreaView style={{ flex: 1 }}>
         <View style={styles.headerBox}>
-          <TouchableOpacity onPress={() => navigation.goBack()}>
-            <Ionicons name="chevron-back-sharp" size={30} color="black" />
-          </TouchableOpacity>
           <View style={styles.headerContainer}>
+            <TouchableOpacity onPress={() => navigation.goBack()}>
+              <Ionicons name="chevron-back-sharp" size={30} color="white" />
+            </TouchableOpacity>
             <Text style={{ ...globalStyles.heading, color: "white" }}>
               Deine Geschichten
             </Text>
@@ -118,6 +118,7 @@ export default Stories;
 
 const styles = StyleSheet.create({
   headerContainer: {
+    flexDirection: "row",
     justifyContent: "center",
     alignItems: "center",
     backgroundColor: Colors.primary,
