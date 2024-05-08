@@ -114,6 +114,9 @@ const Home = ({ route }) => {
           console.error("Unexpected JSON format:", data);
         }
         setIsSaving(false);
+        //set route params to null to avoid re-rendering the screen
+        navigation.setParams({ inputs: null });
+        navigation.navigate("Stories");
       } catch (error) {
         console.error("Error parsing JSON:", error);
       }
@@ -135,6 +138,24 @@ const Home = ({ route }) => {
       />
       <SettingsModal visible={modalVisible} onClose={toggleModal} />
       <SafeAreaView style={styles.safeAreaView}>
+        {isSaving && (
+          <View
+            style={{
+              position: "absolute",
+              top: 0,
+              left: 0,
+              right: 0,
+              bottom: 0,
+              justifyContent: "center",
+              alignItems: "center",
+              backgroundColor: "rgba(0,0,0,0.5)",
+            }}
+          >
+            <Text style={{ color: "white", fontSize: 20 }}>
+              Geschichte wird generiert...
+            </Text>
+          </View>
+        )}
         <View style={styles.header}>
           <TouchableOpacity
             style={styles.gearView}
