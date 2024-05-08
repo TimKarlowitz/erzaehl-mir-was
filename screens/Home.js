@@ -6,7 +6,7 @@ import {
   TextInput,
   TouchableOpacity,
 } from "react-native";
-import React from "react";
+import React, { useEffect } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import globalStyles from "../utils/Styles";
 import { FontAwesome, FontAwesome5 } from "@expo/vector-icons";
@@ -28,11 +28,12 @@ import {
 } from "../utils/database";
 import { set } from "firebase/database";
 
-const Home = () => {
+const Home = ({ route }) => {
   const [text, setText] = React.useState("");
   const navigation = useNavigation();
   const [modalVisible, setModalVisible] = React.useState(false);
   const [parentsModalVisible, setParentsModalVisible] = React.useState(false);
+
   //WARNING: Only for development purposes
   const devMode = true;
   const firebaseFunctionsURL =
@@ -44,6 +45,15 @@ const Home = () => {
     setModalVisible(!modalVisible);
   };
 
+  const inputs = route.params?.inputs;
+
+  useEffect(() => {
+    if (inputs) {
+      storyAPICall(inputs);
+    }
+  }, [inputs]);
+
+  console.log("Inputs: ", inputs);
   const [onModalSuccess, setOnModalSuccess] = React.useState(() => () => {});
 
   const showParentsModal = (onSuccess) => {
@@ -99,7 +109,7 @@ const Home = () => {
         if (data.message && data.message.content) {
           const storyText = data.message.content.trim();
           console.log(storyText);
-          await addStory(keywords, storyText, 1, 1, false, keywords);
+          await addStory(keywords, storyText, 1, 1, false);
         } else {
           console.error("Unexpected JSON format:", data);
         }
@@ -165,19 +175,10 @@ const Home = () => {
               <Text style={globalStyles.paragraph}>ÜBER</Text>
             </View>
 
-            <View style={styles.inputView}>
-              <TextInput
-                placeholder="Drachen, Monster, Prinzessinnen"
-                style={styles.input}
-                onChangeText={(text) => setText(text)}
-                defaultValue={text}
-              />
-            </View>
-
             <View style={styles.goContainer}>
               <TouchableOpacity
                 style={styles.goView}
-                onPress={() => storyAPICall(text)}
+                onPress={() => navigation.navigate("PromptFlowStart")}
               >
                 <Text style={globalStyles.buttonText}>Erzähl</Text>
                 <FontAwesome5

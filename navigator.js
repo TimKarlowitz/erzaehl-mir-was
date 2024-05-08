@@ -10,6 +10,7 @@ import SignUp from "./screens/SignUp";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import ParentsScreen from "./screens/ParentsScreen";
 import Profile from "./screens/Profile";
+import PromptFlowStartScreen from "./screens/PromptFlowStartScreen";
 
 const Tab = createBottomTabNavigator();
 const Stack = createStackNavigator();
@@ -40,6 +41,11 @@ function HomeStackNavigation() {
       <Stack.Screen
         name="Profile"
         component={Profile}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name="PromptFlowStart"
+        component={PromptFlowStartScreen}
         options={{ headerShown: false }}
       />
     </Stack.Navigator>

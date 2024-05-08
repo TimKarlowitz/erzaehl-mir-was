@@ -110,72 +110,40 @@ export const fetchAllKeywords = () => {
   });
 };
 
-export const addStory = (
-  title,
-  content,
-  categoryId,
-  ageGroupId,
-  liked,
-  keywords
-) => {
+export const addStory = (inputs, content, categoryId, ageGroupId, liked) => {
   const currentDate = moment().format("YYYY-MM-DD");
+  // Combine all inputs to form a single title string with commas separating them.
+  const title = inputs.join(", ");
 
   // Start the transaction
   db.transaction(
-    async (tx) => {
+    (tx) => {
       // Insert the story first
       tx.executeSql(
         "INSERT INTO Stories (title, content, date, liked, category_id, agegroup_id) VALUES (?, ?, ?, ?, ?, ?)",
         [title, content, currentDate, liked ? 1 : 0, categoryId, ageGroupId],
-        async (_, result) => {
+        (tx, result) => {
           console.log("Story added with ID:", result.insertId);
-
-          // Separate and clean the keywords
-          const separatedKeywords = keywords.split(",").map((k) => k.trim());
-          console.log("Cleaned Keywords for insertion:", separatedKeywords);
-
-          // Create a promise for each keyword insertion
-          const keywordPromises = separatedKeywords.map((keyword) => {
-            if (keyword.length > 0) {
-              return new Promise((resolve, reject) => {
-                tx.executeSql(
-                  "INSERT INTO Keywords (keyword, story_id) VALUES (?, ?)",
-                  [keyword, result.insertId],
-                  () => {
-                    console.log(`Keyword '${keyword}' inserted successfully.`);
-                    resolve();
-                  },
-                  (_, error) => {
-                    console.error(
-                      `Error inserting keyword '${keyword}':`,
-                      error
-                    );
-                    reject(error); // Reject the promise on error
-                  }
-                );
-              });
-            } else {
-              return Promise.resolve(); // Ignore empty keywords
+          // Insert each input as a keyword
+          inputs.forEach((keyword) => {
+            if (keyword.trim()) {
+              // Ensure the keyword is not empty or just spaces
+              tx.executeSql(
+                "INSERT INTO Keywords (keyword, story_id) VALUES (?, ?)",
+                [keyword, result.insertId],
+                null,
+                (tx, error) =>
+                  console.error(`Error inserting keyword '${keyword}':`, error)
+              );
             }
           });
-
-          // Wait for all keywords to be inserted
-          try {
-            await Promise.all(keywordPromises);
-          } catch (error) {
-            console.error("Error with keyword insertion promises:", error);
-          }
         },
-        (_, error) =>
+        (tx, error) =>
           console.error("Error occurred while adding the story:", error)
       );
     },
-    (error) => {
-      console.error("Transaction Error:", error); // Log transaction-level errors
-    },
-    () => {
-      console.log("Transaction completed successfully");
-    }
+    (error) => console.error("Transaction Error:", error),
+    () => console.log("Transaction completed successfully")
   );
 };
 
