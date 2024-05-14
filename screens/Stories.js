@@ -27,7 +27,12 @@ const Stories = () => {
     try {
       const stories = await getAllStories();
       console.log("Fetched stories:", stories);
-      setStories(stories);
+      // Sortieren der Geschichten nach dem 'date' Feld (neueste zuerst)
+      const sortedStories = stories.sort(
+        (a, b) => new Date(b.date) - new Date(a.date)
+      );
+
+      setStories(sortedStories);
     } catch (err) {
       setError("Failed to fetch stories.");
       console.error(err);
