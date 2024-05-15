@@ -28,6 +28,9 @@ import {
   insertKeyword,
 } from "../utils/database";
 import { set } from "firebase/database";
+import { auth } from "../utils/firebaseConfig";
+import * as NavigationBar from "expo-navigation-bar";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const Home = () => {
   const [text, setText] = React.useState("");
@@ -45,6 +48,15 @@ const Home = () => {
     setModalVisible(!modalVisible);
   };
 
+  //log the user id, email and name
+  useEffect(() => {
+    NavigationBar.setBackgroundColorAsync("black");
+    console.log("User ID: ", auth.currentUser.uid);
+    console.log("User Email: ", auth.currentUser.email);
+    console.log("User Name: ", auth.currentUser.displayName); //null if not set
+  }, []);
+
+  console.log("Inputs: ", inputs);
   const [onModalSuccess, setOnModalSuccess] = React.useState(() => () => {});
 
   const showParentsModal = (onSuccess) => {
@@ -78,7 +90,7 @@ const Home = () => {
     //hide keyboard
     Keyboard.dismiss();
     const ageGroup = "5-10";
-    const style = "educational";
+    const style = AsyncStorage.getItem("storyMode");
     try {
       const response = await fetch(firebaseFunctionsURL, {
         method: "POST",

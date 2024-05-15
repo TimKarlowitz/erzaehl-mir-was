@@ -55,7 +55,7 @@ const AuthStack = () => {
     console.log("RootStack: useEffect");
     const auth = getAuth();
     console.log("RootStack: auth", auth);
-    console.log("RootStack: auth.user", auth.user);
+    console.log("RootStack: auth.user", auth.currentUser);
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       if (user) {
         // User is logged in

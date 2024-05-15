@@ -8,6 +8,7 @@ import { TouchableOpacity } from "react-native-gesture-handler";
 import { Ionicons } from "@expo/vector-icons";
 import globalStyles from "../utils/Styles";
 import { useNavigation, useFocusEffect } from "@react-navigation/native";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const Profile = () => {
   const [isLearning, setIsLearning] = React.useState(false);
@@ -19,9 +20,15 @@ const Profile = () => {
 
   // Handle switch toggle logic to ensure only one switch is on at a time
   const handleToggleSwitch = (switchId) => {
-    setIsLearning(switchId === "learning" || switchId === "both");
-    setIsFun(switchId === "fun" || switchId === "both");
-    setIsBoth(switchId === "both");
+    setIsLearning(
+      switchId === "lehrreich" || switchId === "lehrreich und humorvoll"
+    );
+    setIsFun(
+      switchId === "humorvoll" || switchId === "lehrreich und humorvoll"
+    );
+    setIsBoth(switchId === "lehrreich und humorvoll");
+    AsyncStorage.setItem("storyMode", switchId);
+    console.log("Set StoryMode to: ", switchId);
   };
 
   return (
@@ -80,7 +87,7 @@ const Profile = () => {
               <View style={styles.switchContainer}>
                 <Switch
                   value={isLearning}
-                  onValueChange={() => handleToggleSwitch("learning")}
+                  onValueChange={() => handleToggleSwitch("lehrreich")}
                 />
               </View>
               <View style={styles.switchContainer}>
@@ -91,7 +98,7 @@ const Profile = () => {
               <View style={styles.switchContainer}>
                 <Switch
                   value={isFun}
-                  onValueChange={() => handleToggleSwitch("fun")}
+                  onValueChange={() => handleToggleSwitch("humorvoll")}
                 />
               </View>
               <View style={styles.switchContainer}>
@@ -103,7 +110,9 @@ const Profile = () => {
               <View style={styles.switchContainer}>
                 <Switch
                   value={isBoth}
-                  onValueChange={() => handleToggleSwitch("both")}
+                  onValueChange={() =>
+                    handleToggleSwitch("lehrreich und humorvoll")
+                  }
                 />
               </View>
               <View style={styles.switchContainer}>
