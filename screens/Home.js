@@ -7,7 +7,7 @@ import {
   TouchableOpacity,
   Keyboard,
 } from "react-native";
-import React from "react";
+import React, { useEffect } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import globalStyles from "../utils/Styles";
 import { FontAwesome, FontAwesome5 } from "@expo/vector-icons";
@@ -56,7 +56,6 @@ const Home = () => {
     console.log("User Name: ", auth.currentUser.displayName); //null if not set
   }, []);
 
-  console.log("Inputs: ", inputs);
   const [onModalSuccess, setOnModalSuccess] = React.useState(() => () => {});
 
   const showParentsModal = (onSuccess) => {
