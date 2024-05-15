@@ -8,20 +8,46 @@ import { useNavigation, useFocusEffect } from "@react-navigation/native";
 import { Ionicons } from "@expo/vector-icons";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import globalStyles from "../utils/Styles";
+import { set } from "firebase/database";
+import { auth } from "../utils/firebaseConfig";
+import { sendPasswordResetEmail } from "firebase/auth";
 
 const Settings = () => {
   const [isLearning, setIsLearning] = React.useState(false);
   const [isFun, setIsFun] = React.useState(false);
   const [isBoth, setIsBoth] = React.useState(true);
-  const [name, setName] = React.useState("");
+  const [mail, setMail] = React.useState("");
   const [ageGroup, setAgeGroup] = React.useState("5-10");
   const navigation = useNavigation();
+  const [id, setId] = React.useState("");
 
   // Handle switch toggle logic to ensure only one switch is on at a time
   const handleToggleSwitch = (switchId) => {
     setIsLearning(switchId === "learning" || switchId === "both");
     setIsFun(switchId === "fun" || switchId === "both");
     setIsBoth(switchId === "both");
+  };
+
+  React.useEffect(() => {
+    setMail(auth.currentUser.email);
+    setId(auth.currentUser.uid);
+  }, []);
+
+  const handlePasswordReset = () => {
+    // Implement password reset logic here
+    sendPasswordResetEmail(auth, mail)
+      .then(() => {
+        alert("Password reset email sent");
+        console.log("Password reset email sent to:", mail);
+      })
+      .catch((error) => alert(error.message));
+  };
+
+  const handleLogout = () => {
+    // Implement logout logic here
+    console.log("Logging out...");
+    auth.signOut();
+    //navigation.navigate("Auth");
   };
 
   return (
@@ -40,20 +66,17 @@ const Settings = () => {
         </View>
         <View style={styles.container}>
           <View style={styles.section}>
-            <Text style={styles.sectionText}> Ihre ID: 2WAd9das8J</Text>
+            <Text style={styles.sectionText}> Ihre ID: {id}</Text>
           </View>
           <View style={styles.section}>
-            <Text style={styles.sectionText}>
-              {" "}
-              Ihre Email: tim.karlowitz@gmail.com
-            </Text>
+            <Text style={styles.sectionText}> E-Mail: {mail} </Text>
           </View>
-          <TouchableOpacity>
+          <TouchableOpacity onPress={handlePasswordReset}>
             <View style={styles.section}>
               <Text style={styles.sectionText}> Passwort vergessen </Text>
             </View>
           </TouchableOpacity>
-          <TouchableOpacity>
+          <TouchableOpacity onPress={handleLogout}>
             <View style={styles.section}>
               <Text style={styles.sectionText}> Logout </Text>
             </View>
