@@ -5,6 +5,7 @@ import {
   View,
   TextInput,
   TouchableOpacity,
+  Keyboard,
 } from "react-native";
 import React from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -74,6 +75,8 @@ const Home = () => {
 
   async function storyAPICall(keywords) {
     setIsSaving(true);
+    //hide keyboard
+    Keyboard.dismiss();
     const ageGroup = "5-10";
     const style = "educational";
     try {
@@ -104,6 +107,7 @@ const Home = () => {
           console.error("Unexpected JSON format:", data);
         }
         setIsSaving(false);
+        navigation.navigate("Stories");
       } catch (error) {
         console.error("Error parsing JSON:", error);
       }
@@ -125,6 +129,24 @@ const Home = () => {
       />
       <SettingsModal visible={modalVisible} onClose={toggleModal} />
       <SafeAreaView style={styles.safeAreaView}>
+        {isSaving && (
+          <View
+            style={{
+              position: "absolute",
+              top: 0,
+              left: 0,
+              right: 0,
+              bottom: 0,
+              justifyContent: "center",
+              alignItems: "center",
+              backgroundColor: "rgba(0,0,0,0.5)",
+            }}
+          >
+            <Text style={{ color: "white", fontSize: 20 }}>
+              Geschichte wird generiert...
+            </Text>
+          </View>
+        )}
         <View style={styles.header}>
           <TouchableOpacity
             style={styles.gearView}
