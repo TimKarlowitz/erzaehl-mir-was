@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import {
   View,
   Text,
@@ -10,16 +10,63 @@ import * as NavigationBar from "expo-navigation-bar";
 import { useFocusEffect } from "@react-navigation/native";
 import Styles from "../utils/Styles";
 import { LinearGradient } from "expo-linear-gradient";
+import AGBModal from "../utils/AGBModal";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const Auth = ({ navigation }) => {
+  const [isAGBModalVisible, setIsAGBModalVisible] = useState(false); // Initialize to false
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    const checkAGBStatus = async () => {
+      try {
+        const hasSeenAGB = await AsyncStorage.getItem("hasSeenAGB");
+        console.log("hasSeenAGB:", hasSeenAGB); // Debug log
+        if (hasSeenAGB === null) {
+          setIsAGBModalVisible(true);
+          console.log("AGBModal should be visible");
+        } else {
+          setIsAGBModalVisible(false);
+        }
+      } catch (error) {
+        console.error("Error reading AsyncStorage:", error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+    checkAGBStatus();
+  }, []);
+
+  const handleAGBModalClose = async () => {
+    console.log("AGBModal closed");
+    try {
+      await AsyncStorage.setItem("hasSeenAGB", "true");
+      setIsAGBModalVisible(false);
+    } catch (error) {
+      console.error("Error setting AsyncStorage:", error);
+    }
+  };
+
   useFocusEffect(
     React.useCallback(() => {
       NavigationBar.setBackgroundColorAsync("#05142f");
     }, [])
   );
 
+  if (isLoading) {
+    return (
+      <View>
+        <Text>Loading...</Text>
+      </View>
+    ); // Or any loading indicator
+  }
+
   return (
     <View style={styles.container}>
+      <AGBModal
+        visible={isAGBModalVisible}
+        onClose={handleAGBModalClose} // Pass the function correctly
+      />
       <ImageBackground
         source={require("../assets/images/background.png")}
         style={styles.imageBackground}

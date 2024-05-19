@@ -10,6 +10,8 @@ import SignUp from "./screens/SignUp";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import ParentsScreen from "./screens/ParentsScreen";
 import Profile from "./screens/Profile";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import AGBModal from "./utils/AGBModal";
 
 const Tab = createBottomTabNavigator();
 const Stack = createStackNavigator();
