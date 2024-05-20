@@ -26,8 +26,6 @@ import {
   addStory,
   insertKeyword,
 } from "../utils/database";
-import { set } from "firebase/database";
-import { auth } from "../utils/firebaseConfig";
 import * as NavigationBar from "expo-navigation-bar";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
@@ -38,7 +36,7 @@ const Home = ({ route }) => {
   const [parentsModalVisible, setParentsModalVisible] = React.useState(false);
 
   //WARNING: Only for development purposes
-  const devMode = true;
+  const devMode = false;
   const firebaseFunctionsURL =
     "https://us-central1-erzaehlmirwas-8301e.cloudfunctions.net/generateStory-generateStory";
 
@@ -59,9 +57,6 @@ const Home = ({ route }) => {
   //log the user id, email and name
   useEffect(() => {
     NavigationBar.setBackgroundColorAsync("black");
-    console.log("User ID: ", auth.currentUser.uid);
-    console.log("User Email: ", auth.currentUser.email);
-    console.log("User Name: ", auth.currentUser.displayName); //null if not set
   }, []);
 
   console.log("Inputs: ", inputs);
