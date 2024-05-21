@@ -134,7 +134,7 @@ const Home = ({ route }) => {
 
   return (
     <ImageBackground
-      source={require("../assets/images/background.png")}
+      source={require("../assets/images/background.jpg")}
       style={StyleSheet.absoluteFillObject}
     >
       <ParentsModal

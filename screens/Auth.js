@@ -68,7 +68,7 @@ const Auth = ({ navigation }) => {
         onClose={handleAGBModalClose} // Pass the function correctly
       />
       <ImageBackground
-        source={require("../assets/images/background.png")}
+        source={require("../assets/images/background.jpg")}
         style={styles.imageBackground}
       >
         <LinearGradient
