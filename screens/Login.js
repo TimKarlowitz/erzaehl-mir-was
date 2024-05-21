@@ -45,7 +45,7 @@ const Login = ({ navigation }) => {
 
   return (
     <ImageBackground
-      source={require("../assets/images/background.png")}
+      source={require("../assets/images/background.jpg")}
       style={styles.imageBackground}
     >
       <SafeAreaView style={styles.container}>

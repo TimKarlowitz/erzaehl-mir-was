@@ -52,7 +52,7 @@ const Settings = () => {
 
   return (
     <ImageBackground
-      source={require("../assets/images/background.png")}
+      source={require("../assets/images/background.jpg")}
       style={StyleSheet.absoluteFillObject}
     >
       <SafeAreaView style={{ flex: 1 }}>
