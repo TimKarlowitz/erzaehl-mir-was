@@ -9,6 +9,7 @@ import { Ionicons } from "@expo/vector-icons";
 import globalStyles from "../utils/Styles";
 import { useNavigation, useFocusEffect } from "@react-navigation/native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const Profile = () => {
   const [isLearning, setIsLearning] = React.useState(false);

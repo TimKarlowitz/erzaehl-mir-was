@@ -5,7 +5,9 @@ import {
   View,
   TextInput,
   TouchableOpacity,
+  Keyboard,
 } from "react-native";
+import React, { useEffect } from "react";
 import React, { useEffect } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import globalStyles from "../utils/Styles";
@@ -29,6 +31,9 @@ import {
 import * as NavigationBar from "expo-navigation-bar";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { set } from "firebase/database";
+import { auth } from "../utils/firebaseConfig";
+import * as NavigationBar from "expo-navigation-bar";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const Home = ({ route }) => {
   const [text, setText] = React.useState("");
@@ -101,6 +106,8 @@ const Home = ({ route }) => {
 
   async function storyAPICall(keywords) {
     setIsSaving(true);
+    //hide keyboard
+    Keyboard.dismiss();
     const ageGroup = "5-10";
     const style = AsyncStorage.getItem("storyMode");
     try {

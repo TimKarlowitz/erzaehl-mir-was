@@ -62,6 +62,7 @@ const AuthStack = () => {
     const auth = getAuth();
     console.log("RootStack: auth", auth);
     console.log("RootStack: auth.user", auth.currentUser);
+    console.log("RootStack: auth.user", auth.currentUser);
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       if (user) {
         // User is logged in
