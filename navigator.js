@@ -10,8 +10,7 @@ import SignUp from "./screens/SignUp";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import ParentsScreen from "./screens/ParentsScreen";
 import Profile from "./screens/Profile";
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import AGBModal from "./utils/AGBModal";
+import PromptFlowStartScreen from "./screens/PromptFlowStartScreen";
 
 const Tab = createBottomTabNavigator();
 const Stack = createStackNavigator();
@@ -44,6 +43,11 @@ function HomeStackNavigation() {
         component={Profile}
         options={{ headerShown: false }}
       />
+      <Stack.Screen
+        name="PromptFlowStart"
+        component={PromptFlowStartScreen}
+        options={{ headerShown: false }}
+      />
     </Stack.Navigator>
   );
 }
@@ -57,6 +61,7 @@ const AuthStack = () => {
     console.log("RootStack: useEffect");
     const auth = getAuth();
     console.log("RootStack: auth", auth);
+    console.log("RootStack: auth.user", auth.currentUser);
     console.log("RootStack: auth.user", auth.currentUser);
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       if (user) {

@@ -4,17 +4,18 @@ import { StyleSheet } from "react-native";
 const globalStyles = StyleSheet.create({
   heading: {
     fontSize: 40,
-    fontWeight: "bold",
     color: Colors.primary,
+    fontFamily: "IrishGrover",
   },
   paragraph: {
     fontSize: 16,
     color: Colors.secondary,
+    fontFamily: "IrishGrover",
   },
   buttonText: {
     fontSize: 20,
     color: Colors.primary,
-    fontWeight: "bold",
+    fontFamily: "IrishGrover",
     marginRight: 10,
   },
 

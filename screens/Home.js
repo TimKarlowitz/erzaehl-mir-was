@@ -8,10 +8,11 @@ import {
   Keyboard,
 } from "react-native";
 import React, { useEffect } from "react";
+import React, { useEffect } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import globalStyles from "../utils/Styles";
 import { FontAwesome, FontAwesome5 } from "@expo/vector-icons";
-import { useNavigation } from "@react-navigation/native";
+import { useNavigation, useFocusEffect } from "@react-navigation/native";
 import { LinearGradient } from "expo-linear-gradient";
 import SettingsScreen from "./Settings";
 import SettingsModal from "../utils/SettingsModal";
@@ -27,18 +28,22 @@ import {
   addStory,
   insertKeyword,
 } from "../utils/database";
+import * as NavigationBar from "expo-navigation-bar";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import { set } from "firebase/database";
 import { auth } from "../utils/firebaseConfig";
 import * as NavigationBar from "expo-navigation-bar";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
-const Home = () => {
+const Home = ({ route }) => {
   const [text, setText] = React.useState("");
   const navigation = useNavigation();
   const [modalVisible, setModalVisible] = React.useState(false);
   const [parentsModalVisible, setParentsModalVisible] = React.useState(false);
+  const [childName, setChildName] = React.useState("");
+
   //WARNING: Only for development purposes
-  const devMode = true;
+  const devMode = false;
   const firebaseFunctionsURL =
     "https://us-central1-erzaehlmirwas-8301e.cloudfunctions.net/generateStory-generateStory";
 
@@ -48,14 +53,29 @@ const Home = () => {
     setModalVisible(!modalVisible);
   };
 
-  //log the user id, email and name
-  useEffect(() => {
-    NavigationBar.setBackgroundColorAsync("black");
-    console.log("User ID: ", auth.currentUser.uid);
-    console.log("User Email: ", auth.currentUser.email);
-    console.log("User Name: ", auth.currentUser.displayName); //null if not set
-  }, []);
+  const inputs = route.params?.inputs;
 
+  useEffect(() => {
+    if (inputs) {
+      storyAPICall(inputs);
+    }
+  }, [inputs]);
+
+  //log the user id, email and name
+  useFocusEffect(
+    React.useCallback(() => {
+      const fetchChildName = async () => {
+        const name = await AsyncStorage.getItem("childName");
+        setChildName(name);
+        console.log("Child Name: ", name);
+      };
+
+      fetchChildName();
+      NavigationBar.setBackgroundColorAsync("black");
+    }, [])
+  );
+
+  console.log("Inputs: ", inputs);
   const [onModalSuccess, setOnModalSuccess] = React.useState(() => () => {});
 
   const showParentsModal = (onSuccess) => {
@@ -113,11 +133,13 @@ const Home = () => {
         if (data.message && data.message.content) {
           const storyText = data.message.content.trim();
           console.log(storyText);
-          await addStory(keywords, storyText, 1, 1, false, keywords);
+          await addStory(keywords, storyText, 1, 1, false);
         } else {
           console.error("Unexpected JSON format:", data);
         }
         setIsSaving(false);
+        //set route params to null to avoid re-rendering the screen
+        navigation.setParams({ inputs: null });
         navigation.navigate("Stories");
       } catch (error) {
         console.error("Error parsing JSON:", error);
@@ -153,7 +175,13 @@ const Home = () => {
               backgroundColor: "rgba(0,0,0,0.5)",
             }}
           >
-            <Text style={{ color: "white", fontSize: 20 }}>
+            <Text
+              style={{
+                color: "white",
+                fontSize: 20,
+                fontFamily: "IrishGrover",
+              }}
+            >
               Geschichte wird generiert...
             </Text>
           </View>
@@ -178,6 +206,7 @@ const Home = () => {
             <MaterialIcons name="person" size={30} color="black" />
           </TouchableOpacity>
         </View>
+
         <View style={styles.bodyHeader}>
           <LinearGradient
             colors={["black", "black", "transparent"]}
@@ -193,24 +222,20 @@ const Home = () => {
               justifyContent: "flex-end",
             }}
           >
+            {childName && (
+              <View style={styles.greetingContainer}>
+                <Text style={globalStyles.heading}>Hallo {childName} </Text>
+              </View>
+            )}
             <View style={styles.body}>
               <Text style={globalStyles.heading}>Erzähl mir was</Text>
               <Text style={globalStyles.paragraph}>ÜBER</Text>
             </View>
 
-            <View style={styles.inputView}>
-              <TextInput
-                placeholder="Drachen, Monster, Prinzessinnen"
-                style={styles.input}
-                onChangeText={(text) => setText(text)}
-                defaultValue={text}
-              />
-            </View>
-
             <View style={styles.goContainer}>
               <TouchableOpacity
                 style={styles.goView}
-                onPress={() => storyAPICall(text)}
+                onPress={() => navigation.navigate("PromptFlowStart")}
               >
                 <Text style={globalStyles.buttonText}>Erzähl</Text>
                 <FontAwesome5
@@ -239,6 +264,11 @@ const Home = () => {
 };
 
 const styles = StyleSheet.create({
+  greetingContainer: {
+    flex: 1,
+    alignItems: "center",
+    justifyContent: "flex-end",
+  },
   storiesView: {
     padding: 10,
     backgroundColor: "white",

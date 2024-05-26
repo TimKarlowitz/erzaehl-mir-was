@@ -1,0 +1,32 @@
+{
+    "1": { 
+        "title": "Charaktere",
+        "description": "Welche Charaktere sollen in deiner Geschichte vorkommen? ein Bär? eine Prinzessin? ein Drache?....",
+        "input": "Ein Bär, ein Drache...",
+        "alert": "Schon alle Charaktere eingetragen? dann drücke auf Weiter, um die Emotionen einzugeben",
+        "tip": "klicke auf das Symbol oben links, um deine Angaben zu ändern"
+    },
+    "2": {
+        "title": "Emotionen",
+        "description": "Welche Emotionen haben deine Charaktere? ein trauriger Bär? eine glückliche Prinzessin? ein freundlicher Drache?...",
+        "input": "Ein trauriger Bär...",
+        "alert": "Hast du die Emotionen deiner Charaktere eingetragen? dann gehts weiter mit dem nächsten Schritt. Klicke auf Weiter",
+        "tip": "klicke auf das Symbol oben links, um deine Angaben zu ändern"
+    },
+    "3": {
+        "title": "Orte",
+        "description": "Hast du die Emotionen deiner Charaktere eingetragen? dann gehts weiter mit dem nächsten Schritt. Klicke auf Weiter",
+        "input": "Im Wald, in der Arktis?...",
+        "alert": "Hast du den Ort deiner Geschichte festgelegt? dann drücke auf Weiter",
+        "tip": "klicke auf das Symbol oben links, um deine Angaben zu ändern"
+    },
+    "4": {
+        "title": "Aktivitäten",
+        "description": "Was machen deine Charaktere? der Bär kämpft gegen den bösen König? der Drache beschützt die Bewohner des Dorfes?...",
+        "input": "Der Bär kämpft gegen den bösen König...",
+        "alert": "Wenn du die Aktivitäten festgelegt hast drücke auf Weiter, damit wir deine Geschichte erstellen können",
+        "tip": "klicke auf das Symbol oben links, um deine Angaben zu ändern"
+    }
+}
+
+
