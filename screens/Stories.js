@@ -8,12 +8,13 @@ import {
 import React, { useEffect, useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import globalStyles from "../utils/Styles";
-import { Button } from "react-native-paper";
+import { Button, Switch } from "react-native-paper";
 import { useNavigation, useFocusEffect } from "@react-navigation/native";
 import { ScrollView, TouchableOpacity } from "react-native-gesture-handler";
 import { getAllStories, likeStory } from "../utils/database";
 import Colors from "../utils/Colors";
 import { Ionicons } from "@expo/vector-icons";
+import { set } from "firebase/database";
 
 const Stories = () => {
   const navigation = useNavigation();
@@ -31,8 +32,11 @@ const Stories = () => {
       const sortedStories = stories.sort(
         (a, b) => new Date(b.date) - new Date(a.date)
       );
-
+      console.log("Sorted stories:", sortedStories);
+      console.log("Story Date:", sortedStories[0].date);
       setStories(sortedStories);
+      setStoriesToShow(sortedStories);
+      console.log("Stories set:", stories);
     } catch (err) {
       setError("Failed to fetch stories.");
       console.error(err);
@@ -70,6 +74,19 @@ const Stories = () => {
     }
   };
 
+  const [showFavs, setShowFavs] = useState(false);
+  const [storiesToShow, setStoriesToShow] = useState([]);
+
+  const handleFavchange = () => {
+    setShowFavs(!showFavs);
+    if (showFavs) {
+      setStoriesToShow(stories);
+    } else {
+      const favs = stories.filter((story) => story.liked === 1);
+      setStoriesToShow(favs);
+    }
+  };
+
   return (
     <ImageBackground
       source={require("../assets/images/background.jpg")}
@@ -81,10 +98,34 @@ const Stories = () => {
             <TouchableOpacity onPress={() => navigation.goBack()}>
               <Ionicons name="chevron-back-sharp" size={30} color="white" />
             </TouchableOpacity>
-            <Text style={{ ...globalStyles.heading, color: "white" }}>
+            <Text
+              style={{
+                ...globalStyles.heading,
+                color: "white",
+                fontFamily: "IrishGrover",
+              }}
+            >
               Deine Geschichten
             </Text>
           </View>
+        </View>
+        <View style={styles.switchView}>
+          <Text
+            style={{
+              color: "white",
+              fontSize: 20,
+              alignSelf: "center",
+              marginRight: 10,
+              fontFamily: "IrishGrover",
+            }}
+          >
+            Nur Favoriten
+          </Text>
+          <Switch
+            value={showFavs}
+            onValueChange={() => handleFavchange()}
+            color={Colors.primary}
+          />
         </View>
         <ScrollView style={{ flex: 1 }}>
           {isLoading ? (
@@ -92,7 +133,7 @@ const Stories = () => {
           ) : error ? (
             <Text>{error}</Text>
           ) : (
-            stories.map((story) => (
+            storiesToShow.map((story) => (
               <View key={story.id} style={styles.storyContainer}>
                 <View
                   style={{
@@ -122,6 +163,15 @@ const Stories = () => {
 export default Stories;
 
 const styles = StyleSheet.create({
+  switchView: {
+    flexDirection: "row",
+    justifyContent: "center",
+    padding: 10,
+    backgroundColor: Colors.primary,
+    margin: 10,
+
+    borderRadius: 10,
+  },
   headerContainer: {
     flexDirection: "row",
     justifyContent: "center",
@@ -133,11 +183,13 @@ const styles = StyleSheet.create({
   titleText: {
     fontSize: 24,
     color: "white",
-    fontWeight: "bold",
+
+    fontFamily: "IrishGrover",
   },
   storyText: {
     fontSize: 20,
     color: "white",
+    fontFamily: "IrishGrover",
   },
   storyContainer: {
     borderRadius: 20,
@@ -145,7 +197,7 @@ const styles = StyleSheet.create({
     padding: 20,
     borderBottomWidth: 1,
     borderBottomColor: "black",
-    backgroundColor: Colors.primary,
+    backgroundColor: "#DA4100",
   },
   headerBox: {
     flexDirection: "row",

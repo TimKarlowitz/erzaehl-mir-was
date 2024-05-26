@@ -10,7 +10,7 @@ import React, { useEffect } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import globalStyles from "../utils/Styles";
 import { FontAwesome, FontAwesome5 } from "@expo/vector-icons";
-import { useNavigation } from "@react-navigation/native";
+import { useNavigation, useFocusEffect } from "@react-navigation/native";
 import { LinearGradient } from "expo-linear-gradient";
 import SettingsScreen from "./Settings";
 import SettingsModal from "../utils/SettingsModal";
@@ -28,15 +28,17 @@ import {
 } from "../utils/database";
 import * as NavigationBar from "expo-navigation-bar";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { set } from "firebase/database";
 
 const Home = ({ route }) => {
   const [text, setText] = React.useState("");
   const navigation = useNavigation();
   const [modalVisible, setModalVisible] = React.useState(false);
   const [parentsModalVisible, setParentsModalVisible] = React.useState(false);
+  const [childName, setChildName] = React.useState("");
 
   //WARNING: Only for development purposes
-  const devMode = false;
+  const devMode = true;
   const firebaseFunctionsURL =
     "https://us-central1-erzaehlmirwas-8301e.cloudfunctions.net/generateStory-generateStory";
 
@@ -55,9 +57,18 @@ const Home = ({ route }) => {
   }, [inputs]);
 
   //log the user id, email and name
-  useEffect(() => {
-    NavigationBar.setBackgroundColorAsync("black");
-  }, []);
+  useFocusEffect(
+    React.useCallback(() => {
+      const fetchChildName = async () => {
+        const name = await AsyncStorage.getItem("childName");
+        setChildName(name);
+        console.log("Child Name: ", name);
+      };
+
+      fetchChildName();
+      NavigationBar.setBackgroundColorAsync("black");
+    }, [])
+  );
 
   console.log("Inputs: ", inputs);
   const [onModalSuccess, setOnModalSuccess] = React.useState(() => () => {});
@@ -157,7 +168,13 @@ const Home = ({ route }) => {
               backgroundColor: "rgba(0,0,0,0.5)",
             }}
           >
-            <Text style={{ color: "white", fontSize: 20 }}>
+            <Text
+              style={{
+                color: "white",
+                fontSize: 20,
+                fontFamily: "IrishGrover",
+              }}
+            >
               Geschichte wird generiert...
             </Text>
           </View>
@@ -182,6 +199,7 @@ const Home = ({ route }) => {
             <MaterialIcons name="person" size={30} color="black" />
           </TouchableOpacity>
         </View>
+
         <View style={styles.bodyHeader}>
           <LinearGradient
             colors={["black", "black", "transparent"]}
@@ -197,6 +215,11 @@ const Home = ({ route }) => {
               justifyContent: "flex-end",
             }}
           >
+            {childName && (
+              <View style={styles.greetingContainer}>
+                <Text style={globalStyles.heading}>Hallo {childName} </Text>
+              </View>
+            )}
             <View style={styles.body}>
               <Text style={globalStyles.heading}>Erzähl mir was</Text>
               <Text style={globalStyles.paragraph}>ÜBER</Text>
@@ -234,6 +257,11 @@ const Home = ({ route }) => {
 };
 
 const styles = StyleSheet.create({
+  greetingContainer: {
+    flex: 1,
+    alignItems: "center",
+    justifyContent: "flex-end",
+  },
   storiesView: {
     padding: 10,
     backgroundColor: "white",

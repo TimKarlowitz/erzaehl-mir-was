@@ -111,7 +111,8 @@ export const fetchAllKeywords = () => {
 };
 
 export const addStory = (inputs, content, categoryId, ageGroupId, liked) => {
-  const currentDate = moment().format("YYYY-MM-DD");
+  // Get the current date with time also
+  const currentDate = moment().format("YYYY-MM-DD HH:mm:ss");
   // Combine all inputs to form a single title string with commas separating them.
   const title = inputs.join(", ");
 
