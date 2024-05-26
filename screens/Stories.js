@@ -90,7 +90,6 @@ const Stories = () => {
   return (
     <ImageBackground
       source={require("../assets/images/background.jpg")}
-      source={require("../assets/images/background.jpg")}
       style={StyleSheet.absoluteFillObject}
     >
       <SafeAreaView style={{ flex: 1 }}>
