@@ -38,7 +38,7 @@ const Home = ({ route }) => {
   const [childName, setChildName] = React.useState("");
 
   //WARNING: Only for development purposes
-  const devMode = true;
+  const devMode = false;
   const firebaseFunctionsURL =
     "https://us-central1-erzaehlmirwas-8301e.cloudfunctions.net/generateStory-generateStory";
 
